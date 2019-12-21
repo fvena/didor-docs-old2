@@ -1,7 +1,11 @@
+# OS Files
 .DS_Store
-node_modules
-/dist
 
+# Dependencies
+node_modules
+
+# Dev/Build Artifacts
+/dist
 /tests/e2e/reports/
 selenium-debug.log
 chromedriver.log
@@ -18,7 +22,6 @@ yarn-error.log*
 
 # Editor directories and files
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj

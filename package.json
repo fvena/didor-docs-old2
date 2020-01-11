@@ -1,23 +1,61 @@
 {
   "name": "didor-docs",
-  "version": "0.1.0",
-  "private": true,
+  "version": "2.0.0",
+  "description": "Tool to document your own library of UI components with Vue",
+  "author": "Francisco Vena <fvena32@gmail.com> (http://www.fvena.com/)",
+  "homepage": "https://github.com/fvena/didor-docs#readme",
+  "private": false,
+  "license": "MIT",
+  "preferGlobal": true,
+  "main": "bin/docs",
+  "bin": {
+    "didor-docs": "bin/docs"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "lint:stylelint": "stylelint --fix",
-    "lint:prettier": "prettier --write --loglevel warn",
     "commit": "git-cz",
+    "lint:prettier": "prettier --write --loglevel warn",
+    "lint:stylelint": "stylelint --fix",
     "release": "standard-version"
   },
   "dependencies": {
+    "@didor/components": "^0.5.10",
     "axios": "^0.19.0",
+    "chalk": "^3.0.0",
+    "clear": "^0.1.0",
+    "clipboard": "^2.0.4",
+    "commander": "^4.0.1",
+    "connect": "^3.7.0",
+    "connect-history-api-fallback": "^1.6.0",
+    "connect-livereload": "^0.6.1",
     "core-js": "^3.4.3",
+    "figlet": "^1.2.4",
+    "js-yaml": "^3.13.1",
     "lint-staged": "^9.5.0",
+    "livereload": "^0.8.2",
+    "lodash": "^4.17.15",
+    "markdown-it": "^10.0.0",
+    "markdown-it-div": "^1.1.0",
+    "markdown-it-emoji": "^1.4.0",
+    "markdown-it-front-matter": "^0.1.2",
+    "markdown-it-task-lists": "^2.1.1",
+    "markdown-it-toc-and-anchor": "^4.2.0",
+    "markdown-it-video": "^0.6.3",
+    "nprogress": "^0.2.0",
+    "open": "^7.0.0",
+    "path": "^0.12.7",
+    "path-exists": "^4.0.0",
+    "prismjs": "^1.17.1",
     "register-service-worker": "^1.6.2",
+    "serve-handler": "^6.1.2",
+    "serve-static": "^1.14.1",
+    "spa-server": "^1.0.0",
+    "update-notifier": "^4.0.0",
+    "v-runtime-template": "^1.10.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3"
   },
@@ -32,6 +70,7 @@
     "@vue/eslint-config-airbnb": "^4.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "^10.0.3",
+    "babel-plugin-prismjs": "^1.1.1",
     "chromedriver": "79",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
@@ -42,6 +81,7 @@
     "prettier": "1.16.1",
     "sass-loader": "^8.0.0",
     "standard-version": "^7.0.1",
+    "style-resources-loader": "^1.3.2",
     "stylelint": "9.10.1",
     "stylelint-config-css-modules": "1.3.0",
     "stylelint-config-prettier": "4.0.0",
@@ -49,14 +89,15 @@
     "stylelint-config-standard": "18.2.0",
     "stylelint-scss": "3.5.1",
     "vue-cli-plugin-pug": "^1.0.7",
+    "vue-cli-plugin-style-resources-loader": "^0.1.4",
     "vue-template-compiler": "^2.6.10"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   }
 }

@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import App from './App.vue';
-import './registerServiceWorker';
 import router from './router';
+
+import './design/main.scss';
+// import './registerServiceWorker';
 
 Vue.config.productionTip = false;
 

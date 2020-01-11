@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+/* eslint no-console: 0 */
+
+const program = require('commander'); // Framework para desarrollar CLI
+const chalk = require('chalk'); // Colorea las salidas del terminal
+const clear = require('clear'); // Limpia el terminal
+const figlet = require('figlet'); // Crea un título ASCII
+const updateNotifier = require('update-notifier'); // Muestra mensaje si hay una versión nueva
+const pkg = require('../package.json'); // Obtiene el archivo package.json
+
+const renderDocs = require('../lib/didor-docs'); // Levanta un senvidor para mostrar la documentación
+
+/*
+ * Limpia el terminal
+ */
+clear();
+
+/*
+ * Muestra el saludo inicial
+ */
+console.log(chalk.yellow(figlet.textSync('DIDOR', { horizontalLayout: 'full' })));
+console.log(chalk.green(figlet.textSync('DOCS', { verticalLayout: 'full' })));
+
+/*
+ * Configuración del CLI
+ */
+program
+  .version(pkg.version, '-v, --version')
+  .arguments('<dir>')
+  .option('-o, --open', 'Abre la documentación en el navegador por defecto', false)
+  .option('-p, --port <port>', 'Puerto de la documentación', '3001')
+  .option('-l, --liveReloadPort <liveReloadPort>', 'Puerto para el liveReload', '35729')
+  .action((dir, options) => {
+    renderDocs(dir, options);
+  });
+
+/*
+ * Menú de ayuda
+ */
+program.on('--help', () => {
+  console.log('');
+  console.log('  Ejemplos:');
+  console.log('');
+  console.log('    $ didor-docs /docs');
+  console.log('    $ didor-docs /docs -o');
+  console.log('    $ didor-docs /docs -o -p 3001 -l 35729');
+  console.log('');
+});
+
+/*
+ * Incializa el CLI
+ */
+program.parse(process.argv);
+
+/*
+ * Muestra un mensaje indicando si hay una versión nueva
+ */
+updateNotifier({ pkg }).notify();

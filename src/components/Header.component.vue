@@ -1,14 +1,17 @@
 <template lang="pug">
   .header(:class="{'header--github': github}")
     //- Navigation header
-    nav.header__nav(v-if="sections.length")
+    nav.header__nav(v-if="links")
+      //- level 1
       ul
-        li(v-for="section in sections")
-          router-link(:to="section.path" v-if="section.path") {{ section.title }}
-          p(v-else) {{ section.title }}
-          ul(v-if="section.children")
-            li(v-for="children in section.children")
-              router-link(:to="children.path") {{ children.title }}
+        li(v-for="(level1, key1) in links" :key="key1")
+          router-link(:to="level1.slug" v-if="level1.link") {{ level1.title }}
+          p(v-else) {{ level1.title }}
+
+          //- level 2
+          ul(v-if="level1.childNodes")
+            li(v-for="(level2, key2) in level1.childNodes" :key="key2")
+              router-link(:to="level2.slug") {{ level2.title }}
 
     //- Github Link
     Github-Octo(v-if="github" :githubUrl="github")
@@ -22,7 +25,7 @@ export default {
     GithubOcto,
   },
   props: {
-    sections: {
+    links: {
       type: Array,
       required: false,
     },

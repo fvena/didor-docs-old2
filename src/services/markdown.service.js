@@ -66,116 +66,118 @@ Prism.plugins.toolbar.registerButton('copy-to-clipboard', env => {
 });
 
 const MarkdownService = {
+  async getLinks(path) {
+    // Request
+    const response = await ApiService.get(path);
+    return response.data;
+  },
+
   async getMarkdownArticle(file) {
-    try {
-      // Request
-      const response = await ApiService.get(file);
+    // Request
+    console.log('file', file);
+    const response = await ApiService.get(file);
 
-      let data = {};
-      const tags = [];
+    let data = {};
+    const tags = [];
 
-      const markdown = new MarkdownIt({
-        html: true,
-        xhtmlOut: true,
-        breaks: true,
-        linkify: true,
-        typographer: true,
-        quotes: '“”‘’',
-        highlight(code, lang) {
-          const getLanguage = /(\w+)/.exec(lang);
-          const getLines = /\{(.+)\}/.exec(lang);
-          const getFile = /\[(.+)\]/.exec(lang);
+    const markdown = new MarkdownIt({
+      html: true,
+      xhtmlOut: true,
+      breaks: true,
+      linkify: true,
+      typographer: true,
+      quotes: '“”‘’',
+      highlight(code, lang) {
+        const getLanguage = /(\w+)/.exec(lang);
+        const getLines = /\{(.+)\}/.exec(lang);
+        const getFile = /\[(.+)\]/.exec(lang);
 
-          const language = getLanguage ? getLanguage[1] : 'js';
-          const lines = getLines ? getLines[1] : '';
-          const filename = getFile ? getFile[1] : '';
-          const filenameClass = filename ? 'hasFile' : '';
+        const language = getLanguage ? getLanguage[1] : 'js';
+        const lines = getLines ? getLines[1] : '';
+        const filename = getFile ? getFile[1] : '';
+        const filenameClass = filename ? 'hasFile' : '';
 
-          const prismLanguage = Prism.languages[language];
-          const highlight = Prism.highlight(code, prismLanguage);
+        const prismLanguage = Prism.languages[language];
+        const highlight = Prism.highlight(code, prismLanguage);
 
-          setTimeout(() => {
-            Prism.highlightAll();
-          }, 0);
+        setTimeout(() => {
+          Prism.highlightAll();
+        }, 0);
 
-          // eslint-disable-next-line
-          return `<pre class="line-numbers ${filenameClass}" data-lang="${language}" data-line="${lines}"><code class="language-${language}">${highlight}</code><div class="file">${filename}</div></pre>`;
+        // eslint-disable-next-line
+        return `<pre class="line-numbers ${filenameClass}" data-lang="${language}" data-line="${lines}"><code class="language-${language}">${highlight}</code><div class="file">${filename}</div></pre>`;
+      },
+    })
+      .use(MarkdownToc, {
+        tocClassName: 'markdownToc',
+        tocFirstLevel: 2,
+        tocLastLevel: 2,
+        anchorLink: false,
+      })
+      .use(MarkdownFrontMatter, frontMatter => {
+        data = yaml.load(frontMatter);
+      })
+      .use(MarkdownEmoji)
+      .use(MarkdownVideo)
+      .use(MarkdownNotes, {
+        render(tokens, idx) {
+          let tag = tokens[idx].info.trim();
+          const openTag = tokens[idx].nesting === 1;
+
+          // Check is collapse tag
+          const collapse = tag.match(/^collapse title="(.*)"$/);
+          if (collapse) tag = 'collapse';
+
+          if (tag) {
+            tags.push(tag);
+          } else {
+            tag = tags.pop();
+          }
+
+          switch (tag) {
+            // Alarms
+            case 'tip':
+            case 'note':
+            case 'warn':
+              if (openTag) {
+                return `<div>\n<Alarm type="${tag}">\n`;
+              }
+              return '</Alarm>\n</div>\n';
+
+            // Demo
+            case 'demo':
+              if (openTag) {
+                return '<div>\n<Demo>\n';
+              }
+              return '</Demo>\n</div>\n';
+
+            // Collapse
+            case 'collapse':
+              if (openTag) {
+                return `<div>\n<Collapse title="${collapse[1]}">\n`;
+              }
+              return '</Collapse>\n</div>\n';
+
+            // Codegroup
+            case 'codegroup':
+              if (openTag) {
+                return '<div>\n<Codegroup>\n';
+              }
+              return '</Codegroup>\n</div>\n';
+
+            // Default
+            default:
+              if (openTag) {
+                return `<div class="${tag}">\n`;
+              }
+              return '</div>\n';
+          }
         },
       })
-        .use(MarkdownToc, {
-          tocClassName: 'markdownToc',
-          tocFirstLevel: 2,
-          tocLastLevel: 2,
-          anchorLink: false,
-        })
-        .use(MarkdownFrontMatter, frontMatter => {
-          data = yaml.load(frontMatter);
-        })
-        .use(MarkdownEmoji)
-        .use(MarkdownVideo)
-        .use(MarkdownNotes, {
-          render(tokens, idx) {
-            let tag = tokens[idx].info.trim();
-            const openTag = tokens[idx].nesting === 1;
+      .use(MarkdownCheckbox, { label: true, labelAfter: true })
+      .render(response.data);
 
-            // Check is collapse tag
-            const collapse = tag.match(/^collapse title="(.*)"$/);
-            if (collapse) tag = 'collapse';
-
-            if (tag) {
-              tags.push(tag);
-            } else {
-              tag = tags.pop();
-            }
-
-            switch (tag) {
-              // Alarms
-              case 'tip':
-              case 'note':
-              case 'warn':
-                if (openTag) {
-                  return `<div>\n<Alarm type="${tag}">\n`;
-                }
-                return '</Alarm>\n</div>\n';
-
-              // Demo
-              case 'demo':
-                if (openTag) {
-                  return '<div>\n<Demo>\n';
-                }
-                return '</Demo>\n</div>\n';
-
-              // Collapse
-              case 'collapse':
-                if (openTag) {
-                  return `<div>\n<Collapse title="${collapse[1]}">\n`;
-                }
-                return '</Collapse>\n</div>\n';
-
-              // Codegroup
-              case 'codegroup':
-                if (openTag) {
-                  return '<div>\n<Codegroup>\n';
-                }
-                return '</Codegroup>\n</div>\n';
-
-              // Default
-              default:
-                if (openTag) {
-                  return `<div class="${tag}">\n`;
-                }
-                return '</div>\n';
-            }
-          },
-        })
-        .use(MarkdownCheckbox, { label: true, labelAfter: true })
-        .render(response.data);
-
-      return { markdown, data };
-    } catch (error) {
-      console.log(error);
-      return '';
-    }
+    return { markdown, data };
   },
 };
 

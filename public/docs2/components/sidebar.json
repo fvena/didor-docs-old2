@@ -1,0 +1,260 @@
+[
+  {
+    "title": "Introducción",
+    "children": [
+      {
+        "title": "Guía de Inicio",
+        "path": "/started"
+      },
+      {
+        "title": "Instalación",
+        "path": "/installation"
+      },
+      {
+        "title": "Personalización",
+        "path": "/customization"
+      }
+    ]
+  },
+  {
+    "title": "Utilidades",
+    "children": [
+      {
+        "title": "Variables",
+        "path": "/started"
+      },
+      {
+        "title": "Funciones",
+        "path": "/started"
+      },
+      {
+        "title": "Mixins",
+        "path": "/started"
+      },
+      {
+        "title": "Cheatsheet",
+        "path": "/started"
+      }
+    ]
+  },
+  {
+    "title": "Estilos",
+    "children": [
+      {
+        "title": "Layout",
+        "children": [
+          {
+            "title": "Container",
+            "path": "../../packages/Container/Container"
+          },
+          {
+            "title": "Row",
+            "path": "/row"
+          },
+          {
+            "title": "Col",
+            "path": "/col"
+          },
+          {
+            "title": "Composiciones",
+            "path": "/layout"
+          },
+          {
+            "title": "Responsive",
+            "path": "/responsive"
+          },
+          {
+            "title": "Visibilidad",
+            "path": "/visibility"
+          }
+        ]
+      },
+      {
+        "title": "Diseño",
+        "children": [
+          {
+            "title": "Bordes",
+            "path": "/border"
+          },
+          {
+            "title": "Citas",
+            "path": "/blockquote"
+          },
+          {
+            "title": "Clearfix",
+            "path": "/clearfix"
+          },
+          {
+            "title": "Código",
+            "path": "/code"
+          },
+          {
+            "title": "Colores",
+            "path": "/colors"
+          },
+          {
+            "title": "Float",
+            "path": "/float"
+          },
+          {
+            "title": "Imágenes",
+            "path": "/images"
+          },
+          {
+            "title": "Listados",
+            "path": "/list"
+          },
+          {
+            "title": "Multimedia",
+            "path": "/media"
+          },
+          {
+            "title": "Overflow",
+            "path": "/overflow"
+          },
+          {
+            "title": "Posicionamiento",
+            "path": "/position"
+          },
+          {
+            "title": "Tablas",
+            "path": "/tables"
+          },
+          {
+            "title": "Tamaños",
+            "path": "/sizing"
+          },
+          {
+            "title": "Tipografía",
+            "path": "/typography"
+          },
+          {
+            "title": "Espacios",
+            "path": "/spacing"
+          },
+          {
+            "title": "Sombras",
+            "path": "/floshadowsat"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Componentes",
+    "children": [
+      {
+        "title": "Básicos",
+        "children": [
+          {
+            "title": "Buttons",
+            "path": "/Button"
+          },
+          {
+            "title": "Icons",
+            "path": "/icon"
+          },
+          {
+            "title": "Loading",
+            "path": "/loading"
+          },
+          {
+            "title": "Feedback",
+            "path": "/feedback"
+          },
+          {
+            "title": "*Image",
+            "path": "/input"
+          }
+        ]
+      },
+      {
+        "title": "Formulario",
+        "children": [
+          {
+            "title": "Fieldset",
+            "path": "/Fieldset"
+          },
+          {
+            "title": "Input",
+            "path": "/Input"
+          },
+          {
+            "title": "Checkbox",
+            "path": "/Checkbox"
+          },
+          {
+            "title": "*Radio",
+            "path": "/Input"
+          },
+          {
+            "title": "*Slider",
+            "path": "/Input"
+          },
+          {
+            "title": "Switch",
+            "path": "/Switch"
+          },
+          {
+            "title": "*DatetimePicker",
+            "path": "/Input"
+          },
+          {
+            "title": "*Picker",
+            "path": "/Input"
+          }
+        ]
+      },
+      {
+        "title": "Mostrar contenido",
+        "children": [
+          {
+            "title": "Avatar",
+            "path": "/Avatar"
+          },
+          {
+            "title": "Cell",
+            "path": "/Cell"
+          },
+          {
+            "title": "CellGroup",
+            "path": "/CellGroup"
+          },
+          {
+            "title": "*Collapse",
+            "path": "/Input"
+          },
+          {
+            "title": "*Swipe",
+            "path": "/Input"
+          },
+          {
+            "title": "Popup",
+            "path": "/Popup"
+          },
+          {
+            "title": "Dialog",
+            "path": "/Dialog"
+          },
+          {
+            "title": "*Toast",
+            "path": "/Input"
+          }
+        ]
+      },
+      {
+        "title": "Navegación",
+        "children": [
+          {
+            "title": "*NavBar",
+            "path": "/Input"
+          },
+          {
+            "title": "TabBar",
+            "path": "/TabBar"
+          }
+        ]
+      }
+    ]
+  }
+]

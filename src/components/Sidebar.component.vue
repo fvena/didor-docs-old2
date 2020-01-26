@@ -9,20 +9,20 @@
     nav.sidebar__nav(v-if="links")
       //- Level 1
       ul
-        li(v-for="level1 in links")
-          router-link(:to="section + level1.path" v-if="level1.path") {{ level1.title }}
+        li(v-for="(level1, key1) in links" :key="key1")
+          router-link(:to="level1.slug" v-if="level1.link") {{ level1.title }}
           p(v-else) {{ level1.title }}
 
           //- Level 2
-          ul(v-if="level1.children")
-            li(v-for="level2 in level1.children")
-              router-link(:to="section + level2.path" v-if="level2.path") {{ level2.title }}
+          ul(v-if="level1.childNodes")
+            li(v-for="(level2, key2) in level1.childNodes" :key="key2")
+              router-link(:to="level2.slug" v-if="level2.link") {{ level2.title }}
               p(v-else) {{ level2.title }}
 
               //- Level 3
-              ul(v-if="level2.children")
-                li(v-for="level3 in level2.children")
-                  router-link(:to="section + level3.path") {{ level3.title }}
+              ul(v-if="level2.childNodes")
+                li(v-for="(level3, key3) in level2.childNodes" :key="key3")
+                  router-link(:to="level3.slug") {{ level3.title }}
 </template>
 
 <script>
@@ -34,17 +34,13 @@ export default {
   },
 
   props: {
-    links: {
-      type: Array,
-      required: true,
-    },
-    section: {
-      type: String,
-      required: true,
-    },
     logo: {
       type: String,
       default: '',
+    },
+    links: {
+      type: Array,
+      required: true,
     },
   },
 };

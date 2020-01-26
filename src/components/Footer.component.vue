@@ -2,7 +2,7 @@
   .footer
     //- Prev link
     .pagination-item.pagination-item--previous
-      router-link(:to="section + prevArticle.path" v-if="prevArticle")
+      router-link(:to="prevArticle.slug" v-if="prevArticle")
         .pagination-item-label
           svg.icon(width="10" height="16" viewBox="0 0 10 16")
             polyline(fill="none" vector-effect="non-scaling-stroke" points="8,2 2,8 8,14")
@@ -11,7 +11,7 @@
 
     //- Next link
     .pagination-item.pagination-item--next
-      router-link(:to="section + nextArticle.path" v-if="nextArticle")
+      router-link(:to="nextArticle.slug" v-if="nextArticle")
         .pagination-item-label
           span Siguiente
           svg(width="10" height="16" viewBox="0 0 10 16")
@@ -20,55 +20,35 @@
 </template>
 
 <script>
-import ArrayUtil from '@/utils/array.utils';
-
 export default {
   props: {
-    links: {
+    index: {
+      type: Number,
+      required: true,
+    },
+    articles: {
       type: Array,
-      required: true,
-    },
-    article: {
-      type: String,
-      required: true,
-    },
-    section: {
-      type: String,
       required: true,
     },
   },
 
   computed: {
     /**
-     * Listado con todos los links en un único nivel
-     */
-    articlesList() {
-      return ArrayUtil.flattenList(this.links);
-    },
-
-    /**
-     * Posición dentro del listado de artículos del árticulo seleccionado actualmente
-     */
-    articleIndex() {
-      return this.articlesList.findIndex(item => item.path === this.article);
-    },
-
-    /**
      * Artículo siguiente
      */
     nextArticle() {
-      if (this.articlesList.length <= 0) return null;
-      if (this.articleIndex >= this.articlesList.length) return null;
-      return this.articlesList[this.articleIndex + 1];
+      if (this.articles.length <= 0) return null;
+      if (this.index >= this.articles.length) return null;
+      return this.articles[this.index + 1];
     },
 
     /**
      * Artículo anterior
      */
     prevArticle() {
-      if (this.articlesList.length <= 0) return null;
-      if (this.articleIndex <= 0) return null;
-      return this.articlesList[this.articleIndex - 1];
+      if (this.articles.length <= 0) return null;
+      if (this.index <= 0) return null;
+      return this.articles[this.index - 1];
     },
   },
 };

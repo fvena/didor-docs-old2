@@ -1,14 +1,14 @@
-const getArticlePath = routerPath => {
+const getSection = routerPath => {
   const splitPath = routerPath.split('/').filter(item => item !== '');
-  const section = `/${splitPath.shift()}`;
-  const article = `/${splitPath.join('/')}`;
+  return splitPath.shift();
+  // const article = `/${splitPath.join('/')}`;
 
-  return {
-    section,
-    article,
-  };
+  // return {
+  //   section,
+  //   article,
+  // };
 };
 
 export default {
-  getArticlePath,
+  getSection,
 };

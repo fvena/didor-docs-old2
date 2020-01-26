@@ -89,5 +89,8 @@
     "first-line-h1": false,
     "no-multiple-blanks": false,
     "list-marker-space": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   }
 }

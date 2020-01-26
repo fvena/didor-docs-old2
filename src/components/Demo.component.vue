@@ -1,44 +1,32 @@
+<template lang="pug">
+  .demo
+    iframe#iframe.demo__iframe(
+      src="/demo.html"
+      frameborder="0"
+      scrolling="no"
+      @resize="resize"
+      @load="sendDemo")
+    #demoContent.demo__content
+      slot
+</template>
+
 <script>
-import DemoInstance from '@/services/demo.service';
-
 export default {
-  render(h) {
-    return h('iframe', {
-      on: {
-        load: this.renderChildren,
-        resize: () => {
-          // Resize action
-        },
-      },
-      class: {
-        demo: true,
-      },
-      attrs: {
-        src: '/demo.html',
-        frameborder: 0,
-        resize: this.resize,
-      },
-    });
-  },
-  beforeUpdate() {
-    // freezing to prevent unnessessary Reactifiation of vNodes
-    this.iApp.children = Object.freeze(this.$slots.default);
-  },
   methods: {
-    renderChildren() {
-      const children = this.$slots.default;
-      const body = this.$el.contentDocument.body;
-      const el = document.createElement('DIV'); // we will mount or nested app to this element
-      body.appendChild(el);
+    sendDemo() {
+      const iframe = this.$el.querySelector('#iframe');
+      const content = this.$el.querySelector('#demoContent').innerHTML;
 
-      const iApp = DemoInstance.new(children);
-
-      iApp.$mount(el); // mount into iframe
-
-      this.iApp = iApp; // cache instance for later updates
+      // Hay que añadir un div que envuelva todo y haga de único nodo padre
+      iframe.contentWindow.postMessage(`<div>${content}</div>`, '*');
+      this.resize();
     },
+
     resize() {
-      // Resize action
+      setTimeout(() => {
+        const iframe = this.$el.querySelector('#iframe');
+        iframe.style.height = `${iframe.contentWindow.document.body.scrollHeight}px`;
+      }, 100);
     },
   },
 };
@@ -46,14 +34,15 @@ export default {
 
 <style lang="scss" scoped>
 .demo {
-  width: 100%;
-  padding: 25px;
-  margin: simple() 0;
-  border: 1px solid color(border);
-  border-radius: $border-radius;
+  &__iframe {
+    width: 100%;
+    margin: simple() 0;
+    border: 1px solid color(border);
+    border-radius: $border-radius;
+  }
 
-  > * {
-    margin: 0;
+  &__content {
+    display: none;
   }
 }
 </style>

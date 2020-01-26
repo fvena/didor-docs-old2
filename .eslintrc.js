@@ -13,6 +13,7 @@ module.exports = {
     'prefer-destructuring': 0,
     'max-len': 0,
     'no-nested-ternary': 0,
+    'arrow-parens': [2, 'as-needed', { requireForBlockBody: false }],
   },
   parserOptions: {
     parser: 'babel-eslint',

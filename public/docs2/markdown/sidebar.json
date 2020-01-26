@@ -1,0 +1,63 @@
+[
+  {
+    "title": "Cheatsheet",
+    "path": "/cheatsheet"
+  },
+  {
+    "title": "Markdown Style Guide",
+    "children": [
+      {
+        "title": "Texto",
+        "path": "/text"
+      },
+      {
+        "title": "Blockquotes",
+        "path": "/blockquotes"
+      },
+      {
+        "title": "Cabeceras",
+        "path": "/headings"
+      },
+      {
+        "title": "Listas",
+        "path": "/list"
+      },
+      {
+        "title": "Tablas",
+        "path": "/tables"
+      },
+      {
+        "title": "Código",
+        "path": "/codeblocks"
+      },
+      {
+        "title": "Alertas",
+        "path": "/alerts"
+      },
+      {
+        "title": "Tareas",
+        "path": "/task"
+      },
+      {
+        "title": "Desplegables",
+        "path": "/collapse"
+      },
+      {
+        "title": "Emojis",
+        "path": "/emoji"
+      },
+      {
+        "title": "Videos",
+        "path": "/videos"
+      },
+      {
+        "title": "Tabla de Contenidos",
+        "path": "/toc"
+      },
+      {
+        "title": "Demo",
+        "path": "/demo"
+      }
+    ]
+  }
+]

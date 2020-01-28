@@ -22,33 +22,13 @@
 <script>
 export default {
   props: {
-    index: {
-      type: Number,
-      required: true,
+    prevArticle: {
+      type: Object,
+      default: () => {},
     },
-    articles: {
-      type: Array,
-      required: true,
-    },
-  },
-
-  computed: {
-    /**
-     * Artículo siguiente
-     */
-    nextArticle() {
-      if (this.articles.length <= 0) return null;
-      if (this.index >= this.articles.length) return null;
-      return this.articles[this.index + 1];
-    },
-
-    /**
-     * Artículo anterior
-     */
-    prevArticle() {
-      if (this.articles.length <= 0) return null;
-      if (this.index <= 0) return null;
-      return this.articles[this.index - 1];
+    nextArticle: {
+      type: Object,
+      default: () => {},
     },
   },
 };

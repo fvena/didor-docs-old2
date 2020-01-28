@@ -38,27 +38,6 @@ function Node(title, link, slug) {
   this.slug = slug || '';
 }
 
-// function convertArrayToObject(array, key, parentSlug) {
-//   // return Object.assign({}, ...array.map(item => ({ [slugify(item[key])]: item })));
-//   return Object.assign(
-//     {},
-//     ...array.map(item => {
-//       const slug = slugify(item[key]);
-//       const relativeSlug = parentSlug ? `${parentSlug}/${slug}` : `/${slug}`;
-
-//       if (item.link) {
-//         item.slug = relativeSlug;
-//       }
-
-//       if (item.childNodes) {
-//         item.childNodes = convertArrayToObject(item.childNodes, 'title', relativeSlug);
-//       }
-
-//       return { [slug]: item };
-//     }) // eslint-disable-line
-//   );
-// }
-
 /**
  * Generate a list of links in the string
  *
@@ -77,7 +56,7 @@ const getListLinks = (markdown, section) => new Promise(resolve => {
     if (matchs) {
       const level = matchs[1].length / 2;
       const title = matchs[2];
-      const slug = section ? `/${section}/${slugify(title)}` : `/${slugify(title)}`;
+      const slug = section ? `${section}/${slugify(title)}` : `/${slugify(title)}`;
       const link = matchs[4];
       const node = new Node(title, link, slug);
 
@@ -91,9 +70,6 @@ const getListLinks = (markdown, section) => new Promise(resolve => {
   });
 
   resolve(jsonTree);
-
-
-  // resolve(convertArrayToObject(jsonTree, 'title'));
 });
 
 export default {

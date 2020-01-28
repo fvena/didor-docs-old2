@@ -2,10 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 // Views
-import HomeView from '@/views/Home.view.vue';
 import DocsLayout from '@/views/Docs.view.vue';
-
-// Not found route - 404
 import NotFoundView from '@/views/NotFound.view.vue';
 
 Vue.use(VueRouter);
@@ -14,15 +11,8 @@ const routes = [
   {
     path: '/',
     redirect: {
-      name: 'home',
+      name: 'section',
     },
-  },
-
-  // Home route
-  {
-    path: '/home',
-    component: HomeView,
-    name: 'home',
   },
 
   // Docs routes
@@ -30,6 +20,7 @@ const routes = [
     path: '/:section*',
     name: 'section',
     component: DocsLayout,
+    pathToRegexpOptions: { strict: false },
   },
 
   // Routes not found - 404

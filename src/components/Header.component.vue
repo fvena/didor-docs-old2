@@ -1,7 +1,7 @@
 <template lang="pug">
   .header(:class="{'header--github': github}")
     //- Navigation header
-    nav.header__nav(v-if="links")
+    nav.header__nav(v-if="links.length > 0")
       //- level 1
       ul
         li(v-for="(level1, key1) in links" :key="key1")

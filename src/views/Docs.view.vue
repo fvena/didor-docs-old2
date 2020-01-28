@@ -1,45 +1,34 @@
 <template lang="pug">
-.docs(:class="{ 'docs--no-sidebar': !sidebarLinks, 'docs--show-device': deviceShow }")
+.docs(:class="{ 'docs--no-sidebar': !sidebarLinks.length, 'docs--show-device': deviceShow }")
 
-  //- Sidebar
+  //- Sidebar Area
   Sidebar.docs__sidebar(
-    v-if="sidebarLinks"
     :logo="logo"
     :links="sidebarLinks")
 
   .docs__main(ref="docsContent")
-    //- Header
+    //- Header Area
     Header(
       v-if="navbarLinks || github"
       :github="github"
       :links="navbarLinks")
 
-    //- Content
-    router-view
-
     .docs__content
       .wrapper
-        .error(v-if="navbarError")
-          h1 Lo sentimos, no se han podido cargar los links de las secciones.
-          h2 {{ navbarError }}
-
-        .error(v-if="!navbarError && sidebarError")
-          h1 Lo sentimos, no se han podido cargar los links de esta sección.
-          h2 {{ sidebarError }}
-
-        .error(v-if="!navbarError && !sidebarError && articleError")
-          h1 Lo sentimos, no se han podido cargar el artículo.
-          h2 {{ articleError }}
+        //- .error(v-if="error")
+        //-   h1 Lo sentimos, no se han podido cargar los links de las secciones.
+        //-   h2 {{ error }}
+        //- Content Area
 
         Article(
-          v-if="article"
-          :data="article")
+          v-if="content"
+          :data="content")
 
-        //- Footer
+        //- Footer Area
         Footer(
-          v-if="sidebarLinks"
-          :index="articleIndex"
-          :articles="articlesList")
+          v-if="sidebarLinks.length && article"
+          :prevArticle="article.prev"
+          :nextArticle="article.next")
 
       Device(v-if="deviceShow")
 </template>
@@ -50,11 +39,9 @@ import Header from '@/components/Header.component.vue';
 import Article from '@/components/Article.component.vue';
 import Footer from '@/components/Footer.component.vue';
 import Device from '@/components/Device.component.vue';
-import MarkdownService from '@/services/markdown.service';
-import ErrorService from '@/services/error.service';
+import FileService from '@/services/file.service';
 import ParamsUtil from '@/utils/params.utils';
 import ArrayUtil from '@/utils/array.utils';
-import LinksUtils from '../utils/links.utils';
 
 export default {
   components: {
@@ -67,134 +54,116 @@ export default {
 
   data() {
     return {
-      logo: null,
-      github: null,
-      section: '',
-      path: '',
+      logo: '',
+      github: '',
+      defaultPath: '',
+      navbarPath: '',
+      sidebarPath: '',
+      section: null,
+      article: null,
       sidebarLinks: [],
       navbarLinks: [],
-      article: '',
-      navbarError: '',
-      sidebarError: '',
-      articleError: '',
-      isLoadingNavbar: false,
-      isLoadingSidebar: false,
-      isLoadingArticle: false,
+      content: '',
+      // error: '',
+      // isLoading: false,
       deviceShow: false,
     };
   },
 
-  computed: {
-    /**
-     * Listado con todos los links en un único nivel
-     */
-    articlesList() {
-      if (!this.sidebarLinks.length) return [];
-      return ArrayUtil.flattenList(this.sidebarLinks);
-    },
-
-    /**
-     * Posición dentro del listado de artículos del árticulo seleccionado actualmente
-     */
-    articleIndex() {
-      if (!this.articlesList.length) return 0;
-      return this.articlesList.findIndex(item => item.slug === this.path);
-    },
-  },
-
   methods: {
     /**
-     * Obtiene un listado con todos los links de las secciones
+     * Obtiene los datos para mostrar la documentación
+     *
+     * @params {String} routeTo - Ruta de destino
+     * @params {String} routeFrom - Ruta de origen
      */
-    async getNavbarLinks(path) {
-      try {
-        // Inicializo valores
-        this.isLoadingNavbar = true;
-        this.navbarError = '';
-        this.navbarLinks = [];
-
-        if (!path) return;
-
-        // Obtengo los datos
-        const links = await MarkdownService.getLinks(path);
-        this.navbarLinks = await LinksUtils.getListLinks(links);
-      } catch (error) {
-        const errorId = ErrorService.getErrorId(error);
-
-        switch (errorId) {
-          case 404:
-            this.navbarError = 'No se ha encontrado el archivo';
-            break;
-          default:
-            this.navbarError = 'Ocurrió algún error al intentar parsear el archivo';
-            break;
-        }
-      } finally {
-        this.isLoadingNavbar = false;
+    async getData(routeTo, routeFrom) {
+      /**
+       * Si no se especifica ninguna ruta y tengo un artículo por defecto
+       * redirijo a dicho artículo
+       */
+      if (routeTo === '/' && this.defaultPath) {
+        this.$router.push(this.defaultPath);
+        return;
       }
-    },
 
-    /**
-     * Obtiene un listado con todos los links de una sección
-     */
-    async getSidebarLinks(section) {
-      try {
-        // Inicializo valores
-        this.isLoadingSidebar = true;
-        this.sidebarError = '';
+      /**
+       * Cuando tenemos secciones y no se especifica ninguna ruta, redirecciono a la primera sección
+       * El listado 'this.navbarLinks' puede contener una estructura anidada
+       * para asegurarme que obtengo el primer link, lo busco en una estructura plana
+       */
+      if (routeTo === '/' && ArrayUtil.checkArray(this.navbarLinks)) {
+        const flatNavbarLinks = ArrayUtil.flattenList(this.navbarLinks);
+        const firstSection = flatNavbarLinks[0].slug;
+        this.$router.push(firstSection);
+        return;
+      }
+
+      /**
+       * Si la sección ha cambiado, obtenemos la nueva sección y el sidebar
+       */
+      const fromSection = ParamsUtil.getSection(routeFrom);
+      const toSection = ParamsUtil.getSection(routeTo);
+
+      if (fromSection !== toSection) {
+        /**
+         * Si la sección ha cambiado, inicializo los valores
+         */
+        this.section = null;
         this.sidebarLinks = [];
 
-        // Obtengo los datos
-        const sidebarName = window.$didor.sidebar || '_sidebar.md';
-        const path = `${section}/${sidebarName}`;
-        const links = await MarkdownService.getLinks(path);
-        this.sidebarLinks = await LinksUtils.getListLinks(links, section);
-      } catch (error) {
-        const errorId = ErrorService.getErrorId(error);
-
-        switch (errorId) {
-          case 404:
-            this.sidebarError = 'No se ha encontrado el archivo';
-            break;
-          default:
-            this.sidebarError = 'Ocurrió algún error al intentar parsear el archivo';
-            break;
+        /**
+         * Si tenemos secciones, busco la sección actual
+         */
+        if (ArrayUtil.checkArray(this.navbarLinks)) {
+          const section = await ArrayUtil.searchItemBySlug(this.navbarLinks, toSection);
+          this.section = section.current;
         }
-      } finally {
-        this.isLoadingSidebar = false;
-      }
-    },
 
-    /**
-     * Obtiene el artículo seleccionado
-     */
-    async getArticle() {
-      try {
-        // Inicializo valores
-        this.isLoadingArticle = true;
-        this.articleError = '';
-        this.article = '';
-        this.deviceShow = false;
+        /**
+         * Compruebo si la sección actual es un archivo o un directorio
+         * si es un directorio, intento obtener el listado de artículos
+         */
+        const sectionIsFolder = this.section && this.section.link.slice(-3) !== '.md';
 
-        // Obtengo los datos
-        const file = this.articlesList[this.articleIndex];
-        const article = await MarkdownService.getMarkdownArticle(file.link);
-        this.article = article.markdown || '';
-        this.deviceShow = article.data && article.data.device ? article.data.device : false;
-      } catch (error) {
-        const errorId = ErrorService.getErrorId(error);
-
-        switch (errorId) {
-          case 404:
-            this.articleError = 'No se ha encontrado el archivo';
-            break;
-          default:
-            this.articleError = 'Ocurrió algún error al intentar parsear el archivo';
-            break;
+        if (sectionIsFolder) {
+          const sidebarPath = `${this.section.link}/${this.sidebarPath}`;
+          const sectionSlug = this.section.slug;
+          this.sidebarLinks = await FileService.getLinks(sidebarPath, sectionSlug);
         }
-      } finally {
-        this.isLoadingArticle = false;
       }
+
+      /**
+       * Si tenemos un listado de artículos, busco el artículo actual
+       */
+      this.article = null;
+      this.content = '';
+      this.deviceShow = false;
+
+      if (ArrayUtil.checkArray(this.sidebarLinks)) {
+        /**
+         * Cuando no se especifica ninguna ruta o la ruta es una sección,
+         * redirecciono al primer artículo de la sección
+         * El listado 'this.sidebarLinks' puede contener una estructura anidada
+         * para asegurarme que obtengo el primer link, lo busco en una estructura plana
+         */
+        if (routeTo === '/' || (this.section && this.section.slug === routeTo)) {
+          const flatSidebarLinks = ArrayUtil.flattenList(this.sidebarLinks);
+          const firstArticle = flatSidebarLinks[0].slug;
+          this.$router.push(firstArticle);
+          return;
+        }
+
+        this.article = await ArrayUtil.searchItemBySlug(this.sidebarLinks, routeTo);
+      }
+
+      /**
+       * Obtenemos el contenido del árticulo y los datos
+       */
+      const link = this.article ? this.article.current.link : this.section ? this.section.link : '';
+      const content = link ? await FileService.getArticle(link) : null;
+      this.content = content && content.render ? content.render : '';
+      this.deviceShow = content && content.data && content.data.device ? content.data.device : false;
     },
   },
 
@@ -202,42 +171,63 @@ export default {
     /**
      * Obtengo la configuración del proyecto
      */
-    this.logo = window.$didor.logo || null;
-    this.github = window.$didor.gitRepoLink || null;
+    this.logo = window.$didor.logo || '';
+    this.github = window.$didor.gitRepoLink || '';
+    this.defaultPath = window.$didor.defaultPath || '';
+    this.navbarPath = window.$didor.navbar || '_navbar.md';
+    this.sidebarPath = window.$didor.sidebar || '_sidebar.md';
 
     /**
-     * Obtengo las secciones, sus links y el artículo
+     * Intento obtener los links de la secciones
      */
-    const navbarPath = window.$didor.navbar || '_navbar.md';
-    this.path = this.$route.path;
-    this.section = ParamsUtil.getSection(this.path);
+    this.navbarLinks = await FileService.getLinks(this.navbarPath);
 
-    await this.getNavbarLinks(navbarPath);
-    await this.getSidebarLinks(this.section);
-    this.getArticle(this.path);
-  },
-
-  updated() {
-    this.$refs.docsContent.scrollTop = 0;
+    /**
+     * Obtengo los datos de la ruta
+     */
+    this.getData(this.$route.path);
   },
 
   async beforeRouteUpdate(routeTo, routeFrom, next) {
     /**
-     * Solo si la sección ha cambiado, obtengo sus links
+     * Por defecto, si la ruta de destino apunta a una sección y no a un artículo
+     * redirijo al primer artículo de dicha sección.
+     * El problema es que si estoy en el primer artículo de la sección,
+     * y pulso en algún enlace que apunte a la sección,
+     * al intentar ir a la misma ruta en la que me encuentro se genera un error.
+     * Para evitarlo, compruebo cuando se dá el caso y evito que la redirección.
      */
-    const fromSection = ParamsUtil.getSection(routeFrom.path);
-    const toSection = ParamsUtil.getSection(routeTo.path);
 
-    if (fromSection !== toSection) {
-      this.section = toSection;
-      await this.getSidebarLinks(toSection);
+    /**
+     * Cuando tenemos secciones:
+     * Si la ruta de destino apunta a la sección actual,
+     * compruebo si la ruta de ORIGEN coincide con el primer artículo de la sección,
+     * en cuyo caso no debo realizar la redirección.
+     */
+    const sectionSlug = this.section ? this.section.slug : '/';
+
+    if (this.sidebarLinks && routeTo.path === sectionSlug) {
+      const flatSidebarLinks = ArrayUtil.flattenList(this.sidebarLinks);
+      const firstSection = flatSidebarLinks[0].slug;
+      if (routeFrom.path === firstSection) return;
     }
 
     /**
-     * Obtengo el artículo seleccionado
+     * Cuando no tenemos secciones y tenemos un listado de artículos:
+     * Si la ruta de destino apunta a la raíz, se cargará por defecto el primer artículo,
+     * compruebo si la ruta de ORIGEN coincide con el primer artículo de la sección,
+     * en cuyo caso no debo realizar la redirección.
      */
-    this.path = routeTo.path;
-    await this.getArticle(routeTo.path);
+    if (!this.sidebarLinks && this.navbarLinks && routeTo.path === '/') {
+      const flatNavbarLinks = ArrayUtil.flattenList(this.navbarLinks);
+      const firstArticle = flatNavbarLinks[0].slug;
+      if (routeFrom.path === firstArticle) return;
+    }
+
+    /**
+     * Obtengo los datos de la nueva ruta
+     */
+    await this.getData(routeTo.path, routeFrom.path);
 
     next();
   },

@@ -2,6 +2,11 @@ const path = require('path');
 
 module.exports = {
   publicPath: '',
+  configureWebpack: {
+    devServer: {
+      contentBase: [path.join(process.cwd(), './public'), path.join(process.cwd(), './docs')],
+    },
+  },
   runtimeCompiler: true,
   transpileDependencies: ['@didor/didor'],
   pluginOptions: {

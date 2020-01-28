@@ -1,7 +1,7 @@
 <template lang="pug">
   .sidebar
     //- Logo
-    router-link(:to="{name: 'home'}")
+    router-link(:to="{name: 'section'}")
       img.custom-logo(:src="logo" v-if="logo")
       Didor(v-else)
 

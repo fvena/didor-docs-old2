@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD031 MD033-->
 
-# Collapse
+# Demo
 
 Puedes añadir una demo mediante el tag `demo`.
 

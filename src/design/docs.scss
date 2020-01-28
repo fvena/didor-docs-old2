@@ -26,6 +26,10 @@
 }
 
 .docs.docs--no-sidebar {
+  .docs__sidebar {
+    left: -$sidebar-width-large;
+  }
+
   .docs__main {
     padding-left: 0;
   }

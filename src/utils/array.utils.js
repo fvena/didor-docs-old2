@@ -12,36 +12,31 @@ const flattenList = list => {
   return flatList;
 };
 
-function searchArticleBySlug(data, matchingSlug) {
-  for (let i = 0; i < data.length; i += 1) {
-    if (data[i].slug === matchingSlug) {
-      return data[i];
-    }
-    if (data[i].childNodes && data[i].childNodes.length && typeof data[i].childNodes === 'object') {
-      return searchArticleBySlug(data[i].childNodes, matchingSlug);
-    }
-  }
+/**
+ * Devuelve el item de la lista cuyo slug coincida con el indicado
+ *
+ * @params {array} list - Lista con todos los items
+ * @params {string} matchingSlug - Slug que estamos buscando
+ * @returns {Object} - Objeto encontrado
+ */
+// prettier-ignore
+const searchItemBySlug = (list, matchingSlug) => new Promise(resolve => {
+  const flatList = flattenList(list);
+  const index = flatList.findIndex(item => item.slug === matchingSlug);
+  const current = flatList[index];
 
-  return null;
-}
+  const item = {};
+  item.current = current;
+  item.prev = index - 1 >= 0 ? flatList[index - 1] : null;
+  item.next = index + 1 <= flatList.length ? flatList[index + 1] : null;
 
-// function searchArticleBySlug(array, matchingSlug) {
-//   console.log(array);
-//   if (array.slug === matchingSlug) {
-//     return array.link;
-//   }
-//   if (array.childNodes !== null) {
-//     let i;
-//     let result = null;
-//     for (i = 0; result == null && i < array.childNodes.length; i += 1) {
-//       result = searchArticleBySlug(array.childNodes[i], matchingSlug);
-//     }
-//     return result;
-//   }
-//   return null;
-// }
+  resolve(item);
+});
+
+const checkArray = myArray => Array.isArray(myArray) && myArray.length > 0;
 
 export default {
   flattenList,
-  searchArticleBySlug,
+  searchItemBySlug,
+  checkArray,
 };

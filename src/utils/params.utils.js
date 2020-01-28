@@ -1,12 +1,8 @@
 const getSection = routerPath => {
-  const splitPath = routerPath.split('/').filter(item => item !== '');
-  return splitPath.shift();
-  // const article = `/${splitPath.join('/')}`;
+  if (!routerPath || routerPath === '/') return '/';
 
-  // return {
-  //   section,
-  //   article,
-  // };
+  const splitPath = routerPath.split('/').filter(item => item !== '');
+  return `/${splitPath.shift()}`;
 };
 
 export default {

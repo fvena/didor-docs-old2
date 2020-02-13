@@ -30,7 +30,9 @@
           :prevArticle="article.prev"
           :nextArticle="article.next")
 
-      Device(v-if="deviceShow")
+      Device(
+        v-if="deviceShow"
+        :component="component")
 </template>
 
 <script>
@@ -64,6 +66,7 @@ export default {
       sidebarLinks: [],
       navbarLinks: [],
       content: '',
+      component: '/Button.demo.vue',
       // error: '',
       // isLoading: false,
       deviceShow: false,

@@ -4,15 +4,25 @@
 
 Puedes añadir una demo mediante el tag `demo`.
 
-```markdown
-::: demo
+```demo
 <az-button type="danger">Danger Button</az-button>
-:::
 ```
 
-::: demo
+````markdown
+```demo
+<az-button type="danger">Danger Button</az-button>
+```
+````
 
-<div class="text-center">
-  <az-button type="danger">Danger Button</az-button>
-</div>
-:::
+
+Puedes añadir una demo mediante el tag `demo`.
+
+```demoCode
+<az-button type="danger">Danger Button</az-button>
+```
+
+````markdown
+```demoCode
+<az-button type="danger">Danger Button</az-button>
+```
+````

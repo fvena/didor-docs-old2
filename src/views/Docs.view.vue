@@ -167,6 +167,8 @@ export default {
       const content = link ? await FileService.getArticle(link) : null;
       this.content = content && content.render ? content.render : '';
       this.deviceShow = content && content.data && content.data.device ? content.data.device : false;
+
+      document.title = `${window.$didor.title} - ${this.article.current.title}`;
     },
   },
 
@@ -179,6 +181,8 @@ export default {
     this.defaultPath = window.$didor.defaultPath || '';
     this.navbarPath = window.$didor.navbar || '_navbar.md';
     this.sidebarPath = window.$didor.sidebar || '_sidebar.md';
+
+    document.title = window.$didor.title;
 
     /**
      * Intento obtener los links de la secciones

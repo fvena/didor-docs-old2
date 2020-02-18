@@ -22,24 +22,24 @@ export default {
 
 <style lang="scss" scoped>
 .demo {
-  margin-bottom: simple();
+  margin-bottom: 1.6rem;
 }
 
 .demo__title {
-  padding: half() half() 0;
-  margin-bottom: half();
-  font-family: font-family(base);
-  font-size: font-size(small1);
-  font-weight: font-weight(bold);
-  color: color(gray2);
+  padding: 0.8rem 0.8rem 0;
+  margin-bottom: 0.8rem;
+  // font-family: font-family(base);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #3b4c54;
   text-transform: uppercase;
 }
 
 .demo__title__wrapper {
-  border-bottom: 1px solid color(border);
+  border-bottom: 1px solid #e7ebee;
 }
 
 .demo__content--padding {
-  padding: 0 half();
+  padding: 0 0.8rem;
 }
 </style>

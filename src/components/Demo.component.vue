@@ -5,8 +5,9 @@
         .demo__header__button.demo__header__button--red
         .demo__header__button.demo__header__button--yellow
         .demo__header__button.demo__header__button--green
-      .demo__header__actions(v-if="toggleCode")
-        .demo__header__action(@click="toggleCodeBlock") Código
+      .demo__header__title {{ title }}
+      .demo__header__actions
+        .demo__header__action(v-if="toggleCode" @click="toggleCodeBlock") Código
 
     iframe#iframe.demo__iframe(
       src="/demo.html"
@@ -32,6 +33,10 @@ export default {
     toggleCode: {
       type: Boolean,
       default: false,
+    },
+    title: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -79,6 +84,7 @@ export default {
   }
 
   &__code {
+    position: relative;
     overflow: hidden;
     border-top: 1px solid color(gray6);
     transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1);
@@ -88,6 +94,14 @@ export default {
       padding-bottom: size(1.5);
       margin-bottom: 0;
       border-radius: 0 0 $border-radius $border-radius;
+    }
+
+    pre.hasFile {
+      padding-top: size(2.5) !important;
+
+      // .line-numbers-rows {
+      //   padding-top: size(2.5) !important;
+      // }
     }
   }
 
@@ -120,6 +134,11 @@ export default {
       &--green {
         background-color: color(success);
       }
+    }
+
+    &__title {
+      font-size: font-size(small1);
+      color: color(gray3);
     }
 
     &__action {

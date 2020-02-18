@@ -20,6 +20,7 @@ clear();
  */
 console.log(chalk.rgb(40, 164, 189)(figlet.textSync('DIDOR', { horizontalLayout: 'full' })));
 console.log(chalk.rgb(40, 164, 189)(figlet.textSync('DOCS', { verticalLayout: 'full' })));
+console.log('\n\n');
 
 /*
  * Configuración del CLI
@@ -27,14 +28,9 @@ console.log(chalk.rgb(40, 164, 189)(figlet.textSync('DOCS', { verticalLayout: 'f
 // prettier-ignore
 program
   .version(pkg.version, '-v, --version')
-  .arguments('[dir...]')
-  .option('-o, --open', 'Abre la documentación en el navegador por defecto', false)
-  .option('-p, --port <port>', 'Puerto de la documentación', '3001')
-  .option('-l, --lib <lib>', 'Librería Vue con los componentes', '')
-  .option('-s, --styles <styles>', 'Framework Sass con los estilos', '')
-  .option('-h, --share-styles <shareStyles>', 'Archivo con los estilos compartidos para los componente,s', '')
-  .action((dir, options) => {
-    renderDocs(dir, options);
+  .arguments('[configFile]')
+  .action(configFile => {
+    renderDocs(configFile);
   });
 
 /*
@@ -44,9 +40,8 @@ program.on('--help', () => {
   console.log('');
   console.log('  Ejemplos:');
   console.log('');
-  console.log('    $ didor-docs /docs');
-  console.log('    $ didor-docs /docs -o');
-  console.log('    $ didor-docs /docs -o -p 3001');
+  console.log('    $ didor-docs');
+  console.log('    $ didor-docs /didor.config.js');
   console.log('');
 });
 

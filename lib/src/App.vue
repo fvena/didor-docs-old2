@@ -47,20 +47,30 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
+
+html {
+  font-family: 'Source Sans Pro', Helvetica Neue, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.6rem;
+  color: #3b4c54;
+}
+
 .dynamic-component {
   display: flex;
   align-items: center;
   justify-content: center;
   // height: 100vh;
-  padding: double() simple();
+  padding: 3.2rem 1.6rem;
 }
 
 .demo__subtitle {
-  margin-bottom: quarter();
-  font-family: font-family(base);
-  font-size: font-size(small2);
-  font-weight: font-weight(bold);
-  color: color(gray4);
+  margin-bottom: 0.4rem;
+  // font-family: font-family(base);
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: #9da6aa;
   text-transform: uppercase;
 }
 </style>

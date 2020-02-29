@@ -165,10 +165,11 @@ export default {
        */
       const link = this.article ? this.article.current.link : this.section ? this.section.link : '';
       const content = link ? await FileService.getArticle(link) : null;
+      const title = this.article ? this.article.current.title : this.section.title;
       this.content = content && content.render ? content.render : '';
       this.deviceShow = content && content.data && content.data.device ? content.data.device : false;
 
-      document.title = `${window.$didor.title} - ${this.article.current.title}`;
+      document.title = `${window.$didor.title} - ${title}`;
     },
   },
 

@@ -57,7 +57,7 @@ const getListLinks = (markdown, section) => new Promise(resolve => {
       const level = matchs[1].length / 2;
       const title = matchs[2];
       const slug = section ? `${section}/${slugify(title)}` : `/${slugify(title)}`;
-      const link = matchs[4];
+      const link = matchs[4] !== '/' ? matchs[4] : '';
       const node = new Node(title, link, slug);
 
       if (level === 0) {

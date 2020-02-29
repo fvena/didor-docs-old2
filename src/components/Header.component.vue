@@ -5,7 +5,7 @@
       //- level 1
       ul
         li(v-for="(level1, key1) in links" :key="key1")
-          router-link(:to="level1.slug" v-if="level1.link") {{ level1.title }}
+          router-link(:to="level1.slug" v-if="level1.slug") {{ level1.title }}
           p(v-else) {{ level1.title }}
 
           //- level 2

@@ -1,5 +1,5 @@
 {
-  "name": "didor-docs",
+  "name": "@didor/docs",
   "version": "2.0.0",
   "description": "Tool to document your own library of UI components with Vue",
   "author": "Francisco Vena <fvena32@gmail.com> (http://www.fvena.com/)",

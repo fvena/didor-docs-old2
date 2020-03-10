@@ -11,7 +11,19 @@ Puedes añadir una demo mediante el tag `demo`.
 ````
 
 ```demo
-<az-button type="danger">Danger Button</az-button>
+<template>
+  <az-button type="danger">Danger {{ random }}</az-button>
+</template>
+
+<script>
+  module.exports = {
+    computed: {
+      random() {
+        return Math.random()
+      }
+    }
+  }
+</script>
 ```
 
 
@@ -24,5 +36,7 @@ Puedes añadir una demo mediante el tag `demo`.
 ````
 
 ```demoCode[./button.vue]
-<az-button type="danger">Danger Button</az-button>
+<template>
+  <az-button type="danger">Danger Button</az-button>
+</template>
 ```

@@ -147,7 +147,7 @@ const getHiglightCode = (code, lang) => {
   }, 0);
 
   if (isDemo || isDemoCode) {
-    return `<pre v-if="false"></pre><Demo :toggleCode="${isDemoCode}">${encodeURIComponent(code)}<template slot="code"><pre class="line-numbers ${filenameClass}" data-lang="${language}">${highlight}<div class="file">${filename}</div></pre></template></Demo>`;
+    return `<pre v-if="false"></pre><Demo :toggleCode="${isDemoCode}">${encodeURIComponent(code.replace(/ {2}|\r\n|\n|\r/gm, ''))}<template slot="code"><pre class="line-numbers ${filenameClass}" data-lang="${language}">${highlight}<div class="file">${filename}</div></pre></template></Demo>`;
   }
 
   if (isVue) {

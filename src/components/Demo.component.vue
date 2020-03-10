@@ -9,10 +9,7 @@
       .demo__header__actions
         .demo__header__action(v-if="toggleCode" @click="toggleCodeBlock") Código
 
-    iframe#iframe.demo__iframe(
-      src="/demo.html"
-      frameborder="0"
-      @load="sendDemo")
+    iframe.demo__iframe(:src="url" frameborder="0")
 
     transition(
       name="collapse"
@@ -41,6 +38,7 @@ export default {
   },
   data() {
     return {
+      url: '',
       showCodeBlock: this.toggleCode,
     };
   },
@@ -55,12 +53,105 @@ export default {
       el.style.height = `${el.scrollHeight}px`;
     },
 
-    sendDemo() {
-      const iframe = this.$el.querySelector('#iframe');
+    getGeneratedPageURL(data) {
+      const getBlobURL = (code, type) => {
+        const blob = new Blob([code], { type });
+        return URL.createObjectURL(blob);
+      };
+
+      /* eslint-disable */
+      const source = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+            <title>Didor Demo</title>
+            <script src="https://unpkg.com/vue"><\/script>
+            <script src="https://unpkg.com/http-vue-loader"><\/script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/sass.js/0.10.7/sass.sync.min.js"><\/script>
+            ${data.lib && `<script src="http://localhost:${data.port}/lib_bundle.js"><\/script>`}
+            <style>
+              html {
+                font-family: 'Source Sans Pro', Helvetica Neue, Arial, sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 1.6rem;
+                color: #3b4c54;
+              }
+
+              #my-app {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 3.2rem 1.6rem;
+              }
+            </style>
+          </head>
+
+          <body>
+            <div id="my-app">
+              <my-component></my-component>
+            </div>
+
+            <script type="text/javascript">
+              httpVueLoader.httpRequest = function(code) {
+                return new Promise(function(resolve, reject) {
+                  resolve(code);
+                });
+              };
+
+              httpVueLoader.langProcessor.scss = function(scssText) {
+                return new Promise(function(resolve, reject) {
+                  Sass.compile(scssText, function (result) {
+                    if ( result.status === 0 ) {
+                      resolve(result.text)
+                    } else {
+                      reject(result)
+                    }
+                  });
+                });
+              }
+
+              Vue.component("my-component", httpVueLoader(decodeURIComponent('${data.content}')));
+              Vue.config.devtools = false;
+              Vue.config.productionTip = false;
+              Vue.config.silent = true;
+
+              new Vue({
+                el: '#my-app',
+                updated() {
+                  window.frameElement.style.height = document.body.scrollHeight + 'px';
+                },
+              });
+            <\/script>
+          </body>
+        </html>
+      `;
+      /* eslint-enable */
+
+      return getBlobURL(source, 'text/html');
+    },
+
+    async sendDemo(lib, port) {
       const content = this.$el.querySelector('#demoContent').textContent;
 
-      iframe.contentWindow.postMessage(content, '*'); // eslint-disable-line
+      const data = {
+        content,
+        lib,
+        port,
+      };
+
+      this.url = this.getGeneratedPageURL(data);
     },
+  },
+
+  mounted() {
+    const port = window.$didor.port;
+    const lib = window.$didor.lib && window.$didor.lib.components;
+
+    this.sendDemo(lib, port);
   },
 };
 </script>

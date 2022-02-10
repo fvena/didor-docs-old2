@@ -93,7 +93,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "geckodriver": "^1.19.1",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "prettier": "1.16.1",
     "sass-loader": "^8.0.1",
     "standard-version": "^7.0.1",
